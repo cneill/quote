@@ -1,0 +1,33 @@
+{{- define "index" }}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Roam Quote Prettifier</title>
+    <link rel="stylesheet" href="/static/index.css" type="text/css"></link>
+
+    <script src="/static/htmx.js"></script>
+    <script src="/static/index.js"></script>
+</head>
+<body class="body">
+    <form hx-indicator="#indicator">
+        <textarea class="input" id="input" name="input" placeholder="Enter your quote"
+            hx-post="/prettify"
+            hx-swap="outerHTML settle:400ms"
+            hx-target="#output"
+            hx-trigger="keyup changed dely:500ms"></textarea>
+        <br />
+        <!-- <button class="button">Prettify</button> -->
+    </form>
+    <br />
+    <textarea class="output" id="output"></textarea>
+    <button id="copy" class="button button--green">
+        Copy to clipboard
+    </button>
+    <button id="reload-tags" class="button button--blue" hx-post="/tags/reload" hx-swap="none">
+        Reload tags
+    </button>
+    <img id="indicator" src="/static/loading.webp" class="htmx-indicator">
+</body>
+</html>
+{{- end }}
