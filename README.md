@@ -24,4 +24,4 @@ automatically detect all country names as tags, but **be warned**: I like emojis
 Copyright (c) 2023 Charles Neill. All rights reserved. `quote` is distributed under an open-source [BSD licence][license].
 
 [license]: ./LICENSE
-[roam]: https://roamresarch.com/
+[roam]: https://roamresearch.com/
