@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// LoadTags parses a JSON file (./tags.json) in map[string][]string format and uses them to apply tags to inputs.
 func LoadTags() error {
 	// TODO: make this configurable
 	file := "./tags.json"
@@ -25,12 +26,18 @@ func LoadTags() error {
 	return nil
 }
 
+// LoadCountryTags populates the country tags from the 'countries' variable with their flag emoji.
 func LoadCountryTags() {
 	for country, emoji := range countries {
 		countryTags[country] = fmt.Sprintf("%s %s", emoji, country)
 	}
 }
 
+// AddTags looks for instances of tags or their aliases and wraps them appropriately. It might not behave as you expect.
+//
+//   - It will stop trying to match a tag or its aliases once one has been found.
+//   - It will replace country names (e.g. "USA") with a tag with their emoji (e.g. "[[ (flag) USA ]]"
+//   - It will look for instances of a tag that look like the first word in a string and wrap them in an alias.
 func AddTags(input string) string {
 	tagsMatched := map[string]bool{}
 
@@ -42,14 +49,16 @@ func AddTags(input string) string {
 			continue
 		}
 
-		// check for the tag name capitalized at the start of a sentence
+		// check for the tag name, capitalized, with a "." 2 characters before it (presumably, at the start of a sentence)
 		startWord := strings.Title(tag)
-		idx := strings.Index(input, startWord)
+		if startWord != tag {
+			idx := strings.Index(input, startWord)
 
-		if idx == 0 || (idx > 2 && input[idx-2] == '.') {
-			input = strings.Replace(input, startWord, fmt.Sprintf("[%s]([[%s]])", startWord, tag), 1)
+			if idx == 0 || (idx > 2 && input[idx-2] == '.') {
+				input = strings.Replace(input, startWord, fmt.Sprintf("[%s]([[%s]])", startWord, tag), 1)
 
-			continue
+				continue
+			}
 		}
 
 		// handle aliases for the tag
@@ -71,11 +80,10 @@ func AddTags(input string) string {
 	return input
 }
 
+// AddCountryTags adds the tags for countries as described in [AddTags].
 func AddCountryTags(input string) string {
 	for country, tag := range countryTags {
-		if strings.Contains(input, country) {
-			input = strings.Replace(input, country, fmt.Sprintf("[[%s]]", tag), 1)
-		}
+		input = strings.Replace(input, country, fmt.Sprintf("[[%s]]", tag), 1)
 	}
 
 	return input

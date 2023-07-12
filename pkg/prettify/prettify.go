@@ -20,6 +20,7 @@ var (
 	wordwrap    = regexp.MustCompile(`([a-zA-Z])- ([a-zA-Z])`)
 )
 
+// Prettify does all the work of removing garbage and adding tags to the input provided.
 func Prettify(input string) string {
 	input = ReplaceGarbage(input)
 	input = AddTags(input)
@@ -27,6 +28,7 @@ func Prettify(input string) string {
 	return fmt.Sprintf("> %s #quote", input)
 }
 
+// ReplaceGarbage removes fancy quotes/dash, fixes word-wrapping, removes newlines.
 func ReplaceGarbage(input string) string {
 	for in, out := range replacements {
 		input = strings.ReplaceAll(input, in, out)

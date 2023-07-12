@@ -64,6 +64,7 @@ func Prettify(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+// ReloadTags causes the tags to be re-populated from the tags.json file.
 func ReloadTags(w http.ResponseWriter, req *http.Request) {
 	if err := prettify.LoadTags(); err != nil {
 		doErr(w, fmt.Errorf("failed to reload tags: %w", err))
